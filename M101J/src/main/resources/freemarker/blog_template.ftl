@@ -8,14 +8,12 @@
 <#if username??>
     Welcome ${username} <a href="/logout">Logout</a> | <a href="/newpost">New Post</a>
 
+    <p>
 <#else>
-    Welcome Guest <a href="/signup">Signup</a>
+    Welcome guest <a href="/signup"> Sign up </a> | <a href="/login">Log in</a>
 </#if>
-<p>
 
 <h1>My Blog</h1>
-
-<#if myposts?has_content>
 
 <#list myposts as post>
     <h2><a href="/post/${post["permalink"]}">${post["title"]}</a></h2>
@@ -36,13 +34,12 @@
         <em>Filed Under</em>:
         <#if post["tags"]??>
             <#list post["tags"] as tag>
-                 ${tag}
+                <a href="/tag/${tag}">${tag}</a>
             </#list>
         </#if>
 
     <p>
 </#list>
-</#if>
 </body>
 </html>
 

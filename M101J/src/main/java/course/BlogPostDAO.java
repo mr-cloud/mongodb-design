@@ -1,8 +1,35 @@
+/*
+ * Copyright (c) 2008 - 2013 10gen, Inc. <http://10gen.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package course;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.*;
+
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,35 +43,32 @@ public class BlogPostDAO {
         postsCollection = blogDatabase.getCollection("posts");
     }
 
-    // Return a single post corresponding to a permalink
     public Document findByPermalink(String permalink) {
-
-        // todo  XXX
-        Document post = this.postsCollection.find(new Document("permalink", permalink)).first();
-
+        Document post = postsCollection.find(new Document("permalink", permalink)).first();
 
 
         return post;
     }
 
-    // Return a list of posts in descending order. Limit determines
-    // how many posts are returned.
     public List<Document> findByDateDescending(int limit) {
 
-        // todo,  XXX
-        // Return a list of Documents, each one a post from the posts collection
-        List<Document> posts = this.postsCollection.find()
-        		.sort(new Document("date", -1))
-        		.limit(limit).into(new ArrayList<Document>());
-        //testing
-        System.out.println("get posts:");
-        for(Document tmp: posts){
-        	System.out.println(tmp.toString());
-        }
+        List<Document> posts = postsCollection.find().sort(new Document("date", -1)).limit(limit).into(new ArrayList<Document>());
 
         return posts;
     }
 
+    public List<Document> findByTagDateDescending(final String tag) {
+
+//        BasicDBObject query = new BasicDBObject("tags", tag);
+        Bson filter = in("tags",tag);
+
+        //System.out.println("/tag query: " + filter.toBsonDocument(Document.class,new Co).toJson());
+        List<Document> posts = postsCollection.find(filter).sort(new Document("date", -1))
+                .limit(10).into(new ArrayList<Document>());
+        System.out.println("For tag: "+tag);
+
+        return posts;
+    }
 
     public String addPost(String title, String body, List tags, String username) {
 
@@ -53,74 +77,43 @@ public class BlogPostDAO {
         String permalink = title.replaceAll("\\s", "_"); // whitespace becomes _
         permalink = permalink.replaceAll("\\W", ""); // get rid of non alphanumeric
         permalink = permalink.toLowerCase();
-        permalink = permalink+ (new Date()).getTime();
 
+        String permLinkExtra = String.valueOf(GregorianCalendar
+                .getInstance().getTimeInMillis());
+        permalink += permLinkExtra;
 
-        // todo XXX
-        // Remember that a valid post has the following keys:
-        // author, body, permalink, tags, comments, date
-        //
-        // A few hints:
-        // - Don't forget to create an empty list of comments
-        // - for the value of the date key, today's datetime is fine.
-        // - tags are already in list form that implements suitable interface.
-        // - we created the permalink for you above.
+        Document post = new Document("title", title);
+        post.append("author", username);
+        post.append("body", body);
+        post.append("permalink", permalink);
+        post.append("tags", tags);
+        post.append("comments", new java.util.ArrayList());
+        post.append("date", new java.util.Date());
 
-        // Build the post object and insert it
-        Document post = new Document();
-        post.append("title", title)
-        .append("author", username)
-        .append("body", body)
-        .append("permalink", permalink)
-        .append("tags", tags)
-        .append("comments", new ArrayList<Object>())
-        .append("date", new Date());
-        
-        this.postsCollection.insertOne(post);
-
+        try {
+            postsCollection.insertOne(post);
+            System.out.println("Inserting blog post with permalink " + permalink);
+        } catch (Exception e) {
+            System.out.println("Error inserting post");
+            return null;
+        }
 
         return permalink;
     }
 
+    public void addPostComment(final String name, final String email, final String body, final String permalink) {
+        Document comment = new Document("author", name)
+                .append("body", body);
+        if (email != null && !email.equals("")) {
+            comment.append("email", email);
+        }
 
+       UpdateResult result = postsCollection.updateOne(new Document("permalink", permalink),
+                new Document("$push",
+                        new Document("comments", comment)));
 
-
-    // White space to protect the innocent
-
-
-
-
-
-
-
-
-    // Append a comment to a blog post
-    public void addPostComment(final String name, final String email, final String body,
-                               final String permalink) {
-
-        // todo  XXX
-        // Hints:
-        // - email is optional and may come in NULL. Check for that.
-        // - best solution uses an update command to the database and a suitable
-        //   operator to append the comment on to any existing list of comments
-    	Document comment = new Document()
-    			.append("author", name)
-    			.append("email", email)
-    			.append("body", body);
-    	List<Document> comments = new ArrayList<Document>();
-    	Document post = 
-    	this.postsCollection.find((new Document("permalink", permalink))).first();
-    	comments = (List<Document>)post.get("comments");
-    	System.out.println("before add a comment:");
-    	for(Document tmp: comments){
-    		System.out.println(tmp.toString());
-    	}
-    	comments.add(comment);
-    	//update the comments with respect to the responsive post
-    	this.postsCollection.updateOne(new Document("permalink", permalink)
-    			, new Document("$set", new Document("comments", comments)));
-    	System.out.println("after add a comment:");
-    	for(Document tmp: (List<Document>)this.postsCollection.find(new Document("permalink", permalink)).first().get("comments"))
-    		System.out.println(tmp.toString());
+        System.out.println("Matches: " +result.getMatchedCount());
+        System.out.println("Modified: " + result.getModifiedCount());
     }
+
 }
