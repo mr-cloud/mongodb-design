@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
+ * Copyright 2013-2015 MongoDB Inc.
+=======
  * Copyright (c) 2008 - 2013 10gen, Inc. <http://10gen.com>
+>>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +21,31 @@
 
 package course;
 
+<<<<<<< HEAD
+import com.mongodb.ErrorCategory;
+import com.mongodb.MongoWriteException;
+=======
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
+>>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
+import com.mongodb.client.MongoCollection;
 import sun.misc.BASE64Encoder;
+
+import org.bson.Document;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+<<<<<<< HEAD
+=======
 import java.security.SecureRandom;
+>>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 import java.util.Random;
 
 public class UserDAO {
     private final MongoCollection<Document> usersCollection;
-    private Random random = new SecureRandom();
+    private final ThreadLocal<Random> random = new ThreadLocal<Random>();
 
     public UserDAO(final MongoDatabase blogDatabase) {
         usersCollection = blogDatabase.getCollection("users");
@@ -40,7 +54,7 @@ public class UserDAO {
     // validates that username is unique and insert into db
     public boolean addUser(String username, String password, String email) {
 
-        String passwordHash = makePasswordHash(password, Integer.toString(random.nextInt()));
+        String passwordHash = makePasswordHash(password, Integer.toString(getRandom().nextInt()));
 
         Document user = new Document();
 
@@ -61,12 +75,19 @@ public class UserDAO {
     }
 
     public Document validateLogin(String username, String password) {
+<<<<<<< HEAD
+        Document user;
+=======
+>>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 
+<<<<<<< HEAD
+        user = usersCollection.find(eq("_id", username)).first();
+=======
 
         Document user = usersCollection.find(new Document("_id", username)).first();
+>>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 
         if (user == null) {
-            System.out.println("User not in database");
             return null;
         }
 
@@ -96,5 +117,14 @@ public class UserDAO {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("UTF-8 unavailable?  Not a chance", e);
         }
+    }
+
+    private Random getRandom() {
+        Random result = random.get();
+        if (result == null) {
+            result = new Random();
+            random.set(result);
+        }
+        return result;
     }
 }

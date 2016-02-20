@@ -1,6 +1,11 @@
 /*
+<<<<<<< HEAD
+ * Copyright 2013-2015 MongoDB Inc.
+*
+=======
  * Copyright (c) 2008 - 2013 10gen, Inc. <http://10gen.com>
  *
+>>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,14 +22,20 @@
 
 package course;
 
+<<<<<<< HEAD
+=======
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
+>>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
+import com.mongodb.client.MongoCollection;
 import sun.misc.BASE64Encoder;
+
+import org.bson.Document;
+
 
 import java.security.SecureRandom;
 

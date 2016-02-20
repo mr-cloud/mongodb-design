@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.mongodb</groupId>
-    <artifactId>M101J</artifactId>
+    <artifactId>blog-final</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -43,6 +43,22 @@
 
     <!-- Configure maven-compiler-plugin version. -->
     <build>
+<<<<<<< HEAD
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3.2</version>
+          <configuration>
+            <source>1.5</source>
+            <target>1.5</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
+
+</project>
+=======
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -57,3 +73,4 @@
     </build>
 
 </project>
+>>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
