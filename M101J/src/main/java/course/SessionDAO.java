@@ -1,11 +1,6 @@
 /*
-<<<<<<< HEAD
  * Copyright 2013-2015 MongoDB Inc.
 *
-=======
- * Copyright (c) 2008 - 2013 10gen, Inc. <http://10gen.com>
- *
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,14 +17,6 @@
 
 package course;
 
-<<<<<<< HEAD
-=======
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.client.MongoCollection;
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import sun.misc.BASE64Encoder;
@@ -38,6 +25,8 @@ import org.bson.Document;
 
 
 import java.security.SecureRandom;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class SessionDAO {
     private final MongoCollection<Document> sessionsCollection;
@@ -72,12 +61,8 @@ public class SessionDAO {
         String sessionID = encoder.encode(randomBytes);
 
         // build the BSON object
-        Document session = new Document("username", username);
-
-        session.append("_id", sessionID);
-
-        sessionsCollection.deleteMany(
-                new Document("username",username));
+        Document session = new Document("username", username)
+                           .append("_id", sessionID);
 
         sessionsCollection.insertOne(session);
 
@@ -86,13 +71,11 @@ public class SessionDAO {
 
     // ends the session by deleting it from the sesisons table
     public void endSession(String sessionID) {
-        sessionsCollection.deleteOne
-                (new Document("_id", sessionID));
+        sessionsCollection.deleteOne(eq("_id", sessionID));
     }
 
     // retrieves the session from the sessions table
     public Document getSession(String sessionID) {
-        return sessionsCollection.find(
-                new Document("_id", sessionID)).first();
+        return sessionsCollection.find(eq("_id", sessionID)).first();
     }
 }

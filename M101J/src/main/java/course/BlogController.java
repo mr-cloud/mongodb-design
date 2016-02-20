@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * Copyright 2013-2015 MongoDB Inc.
  *
@@ -16,14 +15,9 @@
  *
  */
 
-=======
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 package course;
 
 
-
-import com.mongodb.DB;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
@@ -413,7 +407,6 @@ public class BlogController {
             }
         });
 
-<<<<<<< HEAD
         // will allow a user to click Like on a post
         post(new FreemarkerBasedRoute("/like", "entry_template.ftl") {
             @Override
@@ -442,9 +435,6 @@ public class BlogController {
                 }
             }
         });
-=======
-
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 
         // tells the user that the URL is dead
         get(new FreemarkerBasedRoute("/post_not_found", "post_not_found.ftl") {

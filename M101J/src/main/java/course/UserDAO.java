@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD
  * Copyright 2013-2015 MongoDB Inc.
-=======
- * Copyright (c) 2008 - 2013 10gen, Inc. <http://10gen.com>
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +17,8 @@
 
 package course;
 
-<<<<<<< HEAD
 import com.mongodb.ErrorCategory;
 import com.mongodb.MongoWriteException;
-=======
-import com.mongodb.*;
-import com.mongodb.client.MongoCollection;
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import sun.misc.BASE64Encoder;
@@ -37,11 +28,9 @@ import org.bson.Document;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-<<<<<<< HEAD
-=======
-import java.security.SecureRandom;
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 import java.util.Random;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class UserDAO {
     private final MongoCollection<Document> usersCollection;
@@ -69,23 +58,18 @@ public class UserDAO {
             usersCollection.insertOne(user);
             return true;
         } catch (MongoWriteException e) {
-            System.out.println("Username already in use: " + username);
-            return false;
+            if (e.getError().getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
+                System.out.println("Username already in use: " + username);
+                return false;
+            }
+            throw e;
         }
     }
 
     public Document validateLogin(String username, String password) {
-<<<<<<< HEAD
         Document user;
-=======
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 
-<<<<<<< HEAD
         user = usersCollection.find(eq("_id", username)).first();
-=======
-
-        Document user = usersCollection.find(new Document("_id", username)).first();
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 
         if (user == null) {
             return null;

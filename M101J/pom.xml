@@ -43,7 +43,6 @@
 
     <!-- Configure maven-compiler-plugin version. -->
     <build>
-<<<<<<< HEAD
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -58,19 +57,3 @@
     </build>
 
 </project>
-=======
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-</project>
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git

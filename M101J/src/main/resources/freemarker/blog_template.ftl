@@ -9,11 +9,6 @@
     Welcome ${username} <a href="/logout">Logout</a> | <a href="/newpost">New Post</a>
 
     <p>
-<<<<<<< HEAD
-=======
-<#else>
-    Welcome guest <a href="/signup"> Sign up </a> | <a href="/login">Log in</a>
->>>>>>> branch 'master' of git@github.com:mr-cloud/mongodb-design.git
 </#if>
 
 <h1>My Blog</h1>
